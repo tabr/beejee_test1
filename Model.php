@@ -243,13 +243,15 @@ class M
         $this->TouchDBConnection();
         $selectFields = array('id', 'name', 'email', 'taskText', 'status');
         if ($changeSortOrder > 0 && $changeSortOrder <= count($selectFields)) {
-#            echo '[',abs($this->sortOrder),' == ',$changeSortOrder,']';
+#            echo '[',$this->sortOrder,'abs:',abs($this->sortOrder),' == ',$changeSortOrder,']';
             if (abs($this->sortOrder) == $changeSortOrder) {
                 $this->sortOrder *= -1;
             } else {
+#                echo 'Setting $this->sortOrder to ', $changeSortOrder,'!';
                 $this->sortOrder = $changeSortOrder;
             }
         }
+//        echo '[',$this->sortOrder,'abs:',abs($this->sortOrder),' == ',$changeSortOrder,']';
         $key = abs($this->sortOrder) - 1;
         $value = $selectFields[$key];
         $orderBy = 'ORDER BY ' . $value;

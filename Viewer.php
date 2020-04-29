@@ -15,7 +15,7 @@ class ViewerPageInfo
     public $tasksPerPage = 3;
 }
 
-class V extends aV
+class V extends aV //Or u need a templates?
 {
     //public $tasksPerPage = 3;
     private $PageInfo = NULL;
@@ -23,20 +23,36 @@ class V extends aV
 
     private function TopMenu($pageData)
     {
-        echo '<table border="0" width="100%"><tr><td align="right">';
+#        echo '<table border="0" width="100%"><tr><td align="right">';
+        echo '<selection>';
+        echo '<div class="container text-right">';
+        echo '<div class="row">';
+        echo '<div class="col-sm-1"><a href="index.php"><button onclick="location.href=\'index.php\'">HOME</button></a></div>';
+        echo '<div class="col-sm-10"></div>';
+        echo '<div class="col-sm-1">';
         if ($pageData['Controller']->GetUser()->IsLogged()) {
             echo '<button onclick="location.href=\'?logout\'">Logout</button>';
         } else {
             echo '<button onclick="location.href=\'?login\'">Login</button>';
         }
-        echo '</td></tr></table>';//like menu xD
+#        echo '</td></tr></table>';//like menu xD
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+        echo '</selection>';
         echo '<hr>';
     }
 
     public function ShowLoginPage($pageData)
     {
+        $this->Head('Login');
         $this->TopMenu($pageData);
-        echo '<center>';
+#        echo '<center>';
+        echo '<body>';
+        echo '<selection>';
+        echo '<div class="container text-center">';
+        echo '<div class="row">';
+        echo '<div class="col-sm-12">';
         if (!empty($pageData['errors'])) {
             $this->DisplayError($pageData['errors']);
         }
@@ -51,7 +67,13 @@ pass:<br/><input type="password" name="user[pass]"/><br/>
 <input type="submit" value="Login!">
 </form>
 ';
-            echo '</center>';
+#            echo '</center>';
+            echo '</div>';
+            echo '</div>';
+            echo '</div>';
+            echo '</selection>';
+            $this->BottomScripts();
+            echo '</body>';
         }
     }
 
@@ -93,6 +115,13 @@ pass:<br/><input type="password" name="user[pass]"/><br/>
 //<-errors
     }
 
+    public function BottomScripts()
+    {
+        echo '<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>',PHP_EOL;
+        echo '<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>',PHP_EOL;
+        echo '<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>',PHP_EOL;
+    }
+
     public function Head($title='')
     {
         echo '<head>', PHP_EOL;
@@ -100,12 +129,12 @@ pass:<br/><input type="password" name="user[pass]"/><br/>
         echo '<meta charset="utf-8">',PHP_EOL;
         echo '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">',PHP_EOL;
         if (!empty($title)){
-            echo '<title>',$title,'</title>>';
+            echo '<title>',$title,'</title>';
         }
         echo '</head>', PHP_EOL;
     }
 
-    public function ShowEditTaskTextPage($pageData)
+    public function ShowEditTaskTextPage($pageData)//TODO: hmm...
     {
 #        echo 'ShowEditTaskTextPage($pageData);';
         echo '<center>';
@@ -145,51 +174,71 @@ pass:<br/><input type="password" name="user[pass]"/><br/>
 
         $data = $pageData['data']->GetRequestedData($this->PageInfo->offset, $this->PageInfo->tasksPerPage);
 #        echo '<pre>';var_dump($data);
+        $textRowWirth   = 9;
+        if ($pageData['Controller']->GetUser()->IsAdmin()) {//TODO: Code duplication
+            $textRowWirth-=2;
+        }
 
 
         echo '<body>', PHP_EOL;
+//        echo '<div class="container-fluid">';//container-fluid
         $this->TopMenu($pageData);
-        echo '<center>', PHP_EOL;//The easiest way xD
+#        echo '<center>', PHP_EOL;//The easiest way xD
 
 #        echo '<table class = "sortable">';
-        echo '<table border="1">';
-        echo '<thead>';
-        echo '<tr>';
-        echo '<th><a href="index.php?SortOrderField=2">имя</a></th>';
-        echo '<th><a href="index.php?SortOrderField=3">имэйл</a></th>';
-        echo '<th>текст</th>';
-        echo '<th><a href="index.php?SortOrderField=5">статус</a></th>';
-        if ($pageData['Controller']->GetUser()->IsAdmin()) {
-            echo '<th>Set completed</th>';
-            echo '<th>EDIT</th>';
+        echo '<selection>';
+        echo '<div class="container text-center h3">';
+        echo '<div class="row">';
+
+        echo '<div class="col-sm-1"><a href="index.php?SortOrderField=2">имя</a></div>';
+        echo '<div class="col-sm-1"><a href="index.php?SortOrderField=3">имэйл</a></div>';
+        echo '<div class="col-sm-',$textRowWirth,'">текст</div>';
+        echo '<div class="col-sm-1"><a href="index.php?SortOrderField=5">статус</a></div>';
+
+        if ($pageData['Controller']->GetUser()->IsAdmin()) {//TODO: Code duplication
+            echo '<div class="col-sm-1">Set completed</div>';
+            echo '<div class="col-sm-1">EDIT</div>';
         }
-        echo '</tr>';
-        echo '</thead>';
-        echo '<tbody>';
+        echo '</div>';
+        echo '</div>';
+        echo '</selection>';
+
         foreach ($data as $row) {
-#            echo '<tr><td>',implode('</td><td>',$row),'</td></tr>';
-            echo '<tr>';
-            echo '<td>', $row['name'], '</td>';
-            echo '<td>', $row['email'], '</td>';
-            echo '<td>', $row['taskText'], '</td>';
             $Mark = new Mark($row['status']);
-            echo '<td>', implode($Mark->GetAllTextMarks()), '</td>';
-            if ($pageData['Controller']->GetUser()->IsAdmin()) {
-                echo '<td><a href="?setCompleted=', $row['id'], '">завершить</a></td>';
-                echo '<td><a href="?editTaskText=', $row['id'], '">редактировать</a></td>';
+#            echo '<tr><td>',implode('</td><td>',$row),'</td></tr>';
+            echo '<selection>';
+            echo '<div class="container text-center">';
+            echo '<div class="row row-bordered">';
+
+            echo '<div class="col-sm-1">', $row['name'], '</div>';
+            echo '<div class="col-sm-1">', $row['email'], '</div>';
+            echo '<div class="col-sm-',$textRowWirth,'">', $row['taskText'], '</div>';
+            echo '<div class="col-sm-1">', implode($Mark->GetAllTextMarks()), '</div>';
+            if ($pageData['Controller']->GetUser()->IsAdmin()) {//TODO: Code duplication
+                echo '<div class="col-sm-1"><a href="?setCompleted=', $row['id'], '">завершить</a></div>';
+                echo '<div class="col-sm-1"><a href="?editTaskText=', $row['id'], '">редактировать</a></div>';
             }
-            echo '</tr>';
+            echo '</div>';
+            echo '</div>';
+            echo '</selection>';
         }
-        echo '</tbody>';
-        echo '</table>';
+        echo '<hr/>';
+        echo '<selection>';
+        echo '<div class="container text-center">';
+        echo '<div class="row">';
+        echo '<div class="col-sm-12">';
         for ($i = 1; $i <= $this->PageInfo->numPages; $i++)//TODO make current page inactive
         {
             echo '<a href="index.php?currentPage=', $i, '">[Page', $i, ']</a>';
         }
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+        echo '</selection>';
         echo '<hr/>';
-        if (!empty($pageData['errors'])) {
-            $this->DisplayError($pageData['errors']);
-        }
+        echo '<div class="container text-center">';
+        echo '<div class="row">';
+        echo '<div class="col-sm-12">';
         //we don't need to check "corrections" at client side (js)
         echo '<form action="?requestAddTask" method="POST">' . PHP_EOL;
 #        var_dump($pageData['dataToEdit']);
@@ -198,11 +247,19 @@ pass:<br/><input type="password" name="user[pass]"/><br/>
         echo '<textarea name="addTask[text]" cols="40" rows="5"></textarea><br/>' . PHP_EOL;
         echo '<input type="submit" value="add Task">' . PHP_EOL;
         echo '</form>' . PHP_EOL;;
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+        echo '</selection>';
 #        echo '<br>CurrentPage is ',var_dump($this->PageInfo);
-        echo '</center>', PHP_EOL;//The easiest way xD
-        echo '<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>',PHP_EOL;
-        echo '<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>',PHP_EOL;
-        echo '<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>',PHP_EOL;
+#        echo '</center>', PHP_EOL;//The easiest way xD
+
+#        echo '</div>';//container-fluid
+
+        if (!empty($pageData['errors'])) {
+            $this->DisplayError($pageData['errors']);
+        }
+        $this->BottomScripts();
         echo '</body>', PHP_EOL;
     }
 
