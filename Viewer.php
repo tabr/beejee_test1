@@ -21,47 +21,50 @@ class V extends aV //Or u need a templates?
     private $PageInfo = NULL;
 
 
+    public function Head($title='')
+    {
+        echo '<head>', PHP_EOL;
+        echo '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">', PHP_EOL;
+        echo '<meta charset="utf-8">',PHP_EOL;
+        echo '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">',PHP_EOL;
+        echo '<style>
+main > .container {
+  padding: 60px 15px 0;
+}
+</style>
+        ';
+        if (!empty($title)){
+            echo '<title>',$title,'</title>';
+        }
+        echo '</head>', PHP_EOL;
+    }
+
     private function TopMenu($pageData)
     {
-#        echo '<table border="0" width="100%"><tr><td align="right">';
-/*
-        echo '<selection>';
-        echo '<div class="container text-right">';
-        echo '<div class="row">';
-        echo '<div class="col-sm-1"><a href="index.php"><button onclick="location.href=\'index.php\'">HOME</button></a></div>';
-        echo '<div class="col-sm-10"></div>';
-        echo '<div class="col-sm-1">';
-*/
-        echo '<header>';
         echo '<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">';
-        echo '<table border="0" width="100%"><tr><td><a href="index.php"><button onclick="location.href=\'index . php\'">HOME</button></a></td>>';
-        echo '<td></td>';
-        echo '<td align="right">';
+        echo '<div class="collapse navbar-collapse">';
+        echo '<ul class="navbar-nav mr-auto">';
+        echo '<li><a href="index.php"><button onclick="location.href=\'index.php\'">HOME</button></a></li>';
+        echo '</ul>';
         if ($pageData['Controller']->GetUser()->IsLogged()) {
-            echo '<button onclick="location.href=\'?logout\'">Logout</button>';
-        } else {
-            echo '<button onclick="location.href=\'?login\'">Login</button>';
-        }
-        echo '</td></tr></table>';
-#        echo '</td></tr></table>';//like menu xD
+                echo '<button onclick="location.href=\'?logout\'">Logout</button>';
+                } else {
+                echo '<button onclick="location.href=\'?login\'">Login</button>';
+                }
+
+        echo '</div>';
         echo '</nav>';
         echo '</header>';
-        /*
-        echo '</div>';
-        echo '</div>';
-        echo '</div>';
-        echo '</selection>';
-        echo '<hr>';
- */
+
     }
 
     public function ShowLoginPage($pageData)
     {
         $this->Head('Login');
-        $this->TopMenu($pageData);
-#        echo '<center>';
         echo '<body>';
-        echo '<selection>';
+        $this->TopMenu($pageData);
+        echo '<main>';
+        echo '<div class="container">';
         echo '<div class="container text-center">';
         echo '<div class="row">';
         echo '<div class="col-sm-12">';
@@ -79,11 +82,11 @@ pass:<br/><input type="password" name="user[pass]"/><br/>
 <input type="submit" value="Login!">
 </form>
 ';
-#            echo '</center>';
             echo '</div>';
             echo '</div>';
             echo '</div>';
-            echo '</selection>';
+            echo '</div>';
+            echo '</main>';
             $this->BottomScripts();
             echo '</body>';
         }
@@ -134,28 +137,16 @@ pass:<br/><input type="password" name="user[pass]"/><br/>
         echo '<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>',PHP_EOL;
     }
 
-    public function Head($title='')
-    {
-        echo '<head>', PHP_EOL;
-        echo '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">', PHP_EOL;
-        echo '<meta charset="utf-8">',PHP_EOL;
-        echo '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">',PHP_EOL;
-        echo '<style>
-main > .container {
-  padding: 60px 15px 0;
-}
-</style>
-        ';
-        if (!empty($title)){
-            echo '<title>',$title,'</title>';
-        }
-        echo '</head>', PHP_EOL;
-    }
 
     public function ShowEditTaskTextPage($pageData)//TODO: hmm...
     {
-#        echo 'ShowEditTaskTextPage($pageData);';
-        echo '<center>';
+        $this->Head('Edit');
+        echo '<body>';
+        $this->TopMenu($pageData);
+        echo '<main>';
+        echo '<div class="container text-center">';
+        echo '<div class="row">';
+        echo '<div class="col-sm-12">';
 #        var_dump($pageData['dataToEdit']);
         if (!empty($pageData['dataToEdit'])) {
             echo '<form method="POST" action="?editTaskText=' . $pageData['dataToEdit']['id'] . '">';
@@ -164,11 +155,20 @@ main > .container {
 
             echo '</form>';
         }
-        echo '<a href="index.php">return to main</a>';
-        echo '</center>';
+        if (empty($pageData['errors'])){
+            echo 'OK';
+        }
+        else{
+            $this->DisplayError($pageData['errors']);
+        }
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+        echo '</main>';
+        $this->BottomScripts();
+        echo '</body>';
     }
 
-#    public function ShowIndexPage($data, $currentPage, $errors)
     public function ShowIndexPage($pageData)
     {
         $this->Head();
@@ -176,13 +176,13 @@ main > .container {
 #        var_dump($data);
 #        echo 'PageInfo=[',var_dump($this->PageInfo),']';
 
-        //TODO: move to own method
+        //TODO: move to own method?
 
         $this->PageInfo->numTasks = $pageData['data']->GetNumRows();
         $this->PageInfo->numPages = (int)ceil($this->PageInfo->numTasks / $this->PageInfo->tasksPerPage);
         if ($pageData['currentPage'] > 0 && $pageData['currentPage'] <= $this->PageInfo->numPages) {
             $this->PageInfo->currentPage = $pageData['currentPage'];
-#            echo '[CUURENT PAGE CHANGED!]';
+#            echo '[CURRENT PAGE CHANGED!]';
         }
         $this->PageInfo->offset = (($this->PageInfo->currentPage - 1) * $this->PageInfo->tasksPerPage);
 
@@ -192,9 +192,9 @@ main > .container {
 
         $data = $pageData['data']->GetRequestedData($this->PageInfo->offset, $this->PageInfo->tasksPerPage);
 #        echo '<pre>';var_dump($data);
-        $textRowWirth   = 9;
+        $textRowWidth   = 8;
         if ($pageData['Controller']->GetUser()->IsAdmin()) {//TODO: Code duplication
-            $textRowWirth-=2;
+            $textRowWidth-=2;
         }
 
 
@@ -205,14 +205,13 @@ main > .container {
 #        echo '<table class = "sortable">';
         echo '<main role="main">';
         echo '<div class="container">';//container-fluid
-        echo '<selection>';
-        echo '<div class="container text-center h3">';
+        echo '<div class="container text-center">';
         echo '<div class="row">';
 
         echo '<div class="col-sm-1"><a href="index.php?SortOrderField=2">имя</a></div>';
         echo '<div class="col-sm-1"><a href="index.php?SortOrderField=3">имэйл</a></div>';
-        echo '<div class="col-sm-',$textRowWirth,'">текст</div>';
-        echo '<div class="col-sm-1"><a href="index.php?SortOrderField=5">статус</a></div>';
+        echo '<div class="col-sm-',$textRowWidth,'">текст</div>';
+        echo '<div class="col-sm-2"><a href="index.php?SortOrderField=5">статус</a></div>';
 
         if ($pageData['Controller']->GetUser()->IsAdmin()) {//TODO: Code duplication
             echo '<div class="col-sm-1">Set completed</div>';
@@ -220,29 +219,30 @@ main > .container {
         }
         echo '</div>';
         echo '</div>';
-        echo '</selection>';
 
+        $i=0;
         foreach ($data as $row) {
             $Mark = new Mark($row['status']);
 #            echo '<tr><td>',implode('</td><td>',$row),'</td></tr>';
-            echo '<selection>';
             echo '<div class="container text-center">';
-            echo '<div class="row">';
+            if ((++$i) % 2 == 1 )
+                echo '<div class="row bg-info">';
+            else
+                echo '<div class="row bg-light">';
+
 
             echo '<div class="col-sm-1">', $row['name'], '</div>';
             echo '<div class="col-sm-1">', $row['email'], '</div>';
-            echo '<div class="col-sm-',$textRowWirth,'">', $row['taskText'], '</div>';
-            echo '<div class="col-sm-1">', implode($Mark->GetAllTextMarks()), '</div>';
+            echo '<div class="col-sm-',$textRowWidth,'">', $row['taskText'], '</div>';
+            echo '<div class="col-sm-2">', implode($Mark->GetAllTextMarks()), '</div>';
             if ($pageData['Controller']->GetUser()->IsAdmin()) {//TODO: Code duplication
                 echo '<div class="col-sm-1"><a href="?setCompleted=', $row['id'], '">завершить</a></div>';
                 echo '<div class="col-sm-1"><a href="?editTaskText=', $row['id'], '">редактировать</a></div>';
             }
             echo '</div>';
             echo '</div>';
-            echo '</selection>';
         }
         echo '<hr/>';
-        echo '<selection>';
         echo '<div class="container text-center">';
         echo '<div class="row">';
         echo '<div class="col-sm-12">';
@@ -257,7 +257,6 @@ main > .container {
         echo '</div>';
         echo '</div>';
         echo '</div>';
-        echo '</selection>';
         echo '<hr/>';
         echo '<div class="container text-center">';
         echo '<div class="row">';
@@ -273,7 +272,6 @@ main > .container {
         echo '</div>';
         echo '</div>';
         echo '</div>';
-        echo '</selection>';
 
         echo '</div>';//container-fluid
         echo '</main>';
