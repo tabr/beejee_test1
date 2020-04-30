@@ -42,17 +42,22 @@ main > .container {
     private function TopMenu($pageData)
     {
         echo '<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">';
-        echo '<div class="collapse navbar-collapse">';
-        echo '<ul class="navbar-nav mr-auto">';
-        echo '<li><a href="index.php"><button onclick="location.href=\'index.php\'">HOME</button></a></li>';
-        echo '</ul>';
+        echo '<table width="100%"><tr>';
+        echo '<td><button onclick="location.href=\'index . php\'">HOME</button></a></td>';
+        echo '<td></td>';
+        echo '<td align="right">';
+        //echo '<div class="collapse navbar-collapse">';
+        //echo '<ul class="navbar-nav mr-auto">';
+        //echo '<li><a href="index.php"><button onclick="location.href=\'index.php\'">HOME</button></a></li>';
+        //echo '</ul>';
         if ($pageData['Controller']->GetUser()->IsLogged()) {
                 echo '<button onclick="location.href=\'?logout\'">Logout</button>';
                 } else {
                 echo '<button onclick="location.href=\'?login\'">Login</button>';
                 }
 
-        echo '</div>';
+        echo '</td></tr></table>';
+        //echo '</div>';
         echo '</nav>';
         echo '</header>';
 
@@ -204,7 +209,40 @@ pass:<br/><input type="password" name="user[pass]"/><br/>
 
 #        echo '<table class = "sortable">';
         echo '<main role="main">';
-        echo '<div class="container">';//container-fluid
+        echo '<div class="container">';//main container
+        echo '<table class="table table-striped">';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th><a href="index.php?SortOrderField=2">имя</a></th>';
+        echo '<th><a href="index.php?SortOrderField=3">имэйл</a></th>';
+        echo '<th>текст</th>';
+        echo '<th><a href="index.php?SortOrderField=5">статус</a></th>';
+        if ($pageData['Controller']->GetUser()->IsAdmin()) {//TODO: Code duplication
+            echo '<th>Set completed</th>';
+            echo '<th>EDIT</th>';
+        }
+
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
+        foreach ($data as $row) {
+            $Mark = new Mark($row['status']);
+            echo '<tr>';
+            echo '<td>',$row['name'],'</td>';
+            echo '<td>', $row['email'], '</td>';
+            echo '<td>', $row['taskText'],'</td>';
+            echo '<td>', implode($Mark->GetAllTextMarks()),'</td>';
+            if ($pageData['Controller']->GetUser()->IsAdmin()) {//TODO: Code duplication
+                echo '<td><a href="?setCompleted=', $row['id'], '">завершить</a></td>';
+                echo '<td><a href="?editTaskText=', $row['id'], '">редактировать</a></td>';
+            }
+            echo '</tr>';
+        }
+        echo '</tbody>';
+        echo '</table>';
+/////////////////////////////////////
+//grid-based table (bugged)
+        /*
         echo '<div class="container text-center">';
         echo '<div class="row">';
 
@@ -219,7 +257,6 @@ pass:<br/><input type="password" name="user[pass]"/><br/>
         }
         echo '</div>';
         echo '</div>';
-
         $i=0;
         foreach ($data as $row) {
             $Mark = new Mark($row['status']);
@@ -242,6 +279,9 @@ pass:<br/><input type="password" name="user[pass]"/><br/>
             echo '</div>';
             echo '</div>';
         }
+        */
+/////////////////////////////////////
+
         echo '<hr/>';
         echo '<div class="container text-center">';
         echo '<div class="row">';
@@ -273,7 +313,7 @@ pass:<br/><input type="password" name="user[pass]"/><br/>
         echo '</div>';
         echo '</div>';
 
-        echo '</div>';//container-fluid
+        echo '</div>';//main container
         echo '</main>';
 #        echo '<br>CurrentPage is ',var_dump($this->PageInfo);
 #        echo '</center>', PHP_EOL;//The easiest way xD
