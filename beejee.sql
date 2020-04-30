@@ -17,11 +17,6 @@
 SET @MYSQLDUMP_TEMP_LOG_BIN = @@SESSION.SQL_LOG_BIN;
 SET @@SESSION.SQL_LOG_BIN= 0;
 
---
--- GTID state at the beginning of the backup 
---
-
-SET @@GLOBAL.GTID_PURGED='f1450783-8565-11e2-a364-001b21d5508c:1-167693';
 
 --
 -- Table structure for table `task`
