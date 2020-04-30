@@ -7,7 +7,7 @@ class Mark//hmm... Do i really need to strore ALL marks simultaneousely??!
     const MARK_DONE = 1 << 0;
     const MARK_EDITED_BY_ADMIN = 1 << 1;
 
-    public function GetText($markBitPosition)
+    public function GetText($markBitPosition)//TODO: remove string from here
     {
         switch ($markBitPosition) {
 #            case self::MARK_NONE:

@@ -24,23 +24,35 @@ class V extends aV //Or u need a templates?
     private function TopMenu($pageData)
     {
 #        echo '<table border="0" width="100%"><tr><td align="right">';
+/*
         echo '<selection>';
         echo '<div class="container text-right">';
         echo '<div class="row">';
         echo '<div class="col-sm-1"><a href="index.php"><button onclick="location.href=\'index.php\'">HOME</button></a></div>';
         echo '<div class="col-sm-10"></div>';
         echo '<div class="col-sm-1">';
+*/
+        echo '<header>';
+        echo '<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">';
+        echo '<table border="0" width="100%"><tr><td><a href="index.php"><button onclick="location.href=\'index . php\'">HOME</button></a></td>>';
+        echo '<td></td>';
+        echo '<td align="right">';
         if ($pageData['Controller']->GetUser()->IsLogged()) {
             echo '<button onclick="location.href=\'?logout\'">Logout</button>';
         } else {
             echo '<button onclick="location.href=\'?login\'">Login</button>';
         }
+        echo '</td></tr></table>';
 #        echo '</td></tr></table>';//like menu xD
+        echo '</nav>';
+        echo '</header>';
+        /*
         echo '</div>';
         echo '</div>';
         echo '</div>';
         echo '</selection>';
         echo '<hr>';
+ */
     }
 
     public function ShowLoginPage($pageData)
@@ -128,6 +140,12 @@ pass:<br/><input type="password" name="user[pass]"/><br/>
         echo '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">', PHP_EOL;
         echo '<meta charset="utf-8">',PHP_EOL;
         echo '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">',PHP_EOL;
+        echo '<style>
+main > .container {
+  padding: 60px 15px 0;
+}
+</style>
+        ';
         if (!empty($title)){
             echo '<title>',$title,'</title>';
         }
@@ -181,11 +199,12 @@ pass:<br/><input type="password" name="user[pass]"/><br/>
 
 
         echo '<body>', PHP_EOL;
-//        echo '<div class="container-fluid">';//container-fluid
         $this->TopMenu($pageData);
 #        echo '<center>', PHP_EOL;//The easiest way xD
 
 #        echo '<table class = "sortable">';
+        echo '<main role="main">';
+        echo '<div class="container">';//container-fluid
         echo '<selection>';
         echo '<div class="container text-center h3">';
         echo '<div class="row">';
@@ -208,7 +227,7 @@ pass:<br/><input type="password" name="user[pass]"/><br/>
 #            echo '<tr><td>',implode('</td><td>',$row),'</td></tr>';
             echo '<selection>';
             echo '<div class="container text-center">';
-            echo '<div class="row row-bordered">';
+            echo '<div class="row">';
 
             echo '<div class="col-sm-1">', $row['name'], '</div>';
             echo '<div class="col-sm-1">', $row['email'], '</div>';
@@ -227,10 +246,14 @@ pass:<br/><input type="password" name="user[pass]"/><br/>
         echo '<div class="container text-center">';
         echo '<div class="row">';
         echo '<div class="col-sm-12">';
-        for ($i = 1; $i <= $this->PageInfo->numPages; $i++)//TODO make current page inactive
+        echo '<nav aria-label="Page navigation">';
+        echo '<ul class="pagination justify-content-center">';
+        for ($i = 1; $i <= $this->PageInfo->numPages; $i++)//TODO: make current page inactive?; if pages more than screen?
         {
-            echo '<a href="index.php?currentPage=', $i, '">[Page', $i, ']</a>';
+            echo '<li class="page-item"><a class="page-link" href="index.php?currentPage=', $i, '">Page', $i, '</a></li>';
         }
+        echo '</ul">';
+        echo '</nav>';
         echo '</div>';
         echo '</div>';
         echo '</div>';
@@ -251,10 +274,12 @@ pass:<br/><input type="password" name="user[pass]"/><br/>
         echo '</div>';
         echo '</div>';
         echo '</selection>';
+
+        echo '</div>';//container-fluid
+        echo '</main>';
 #        echo '<br>CurrentPage is ',var_dump($this->PageInfo);
 #        echo '</center>', PHP_EOL;//The easiest way xD
 
-#        echo '</div>';//container-fluid
 
         if (!empty($pageData['errors'])) {
             $this->DisplayError($pageData['errors']);

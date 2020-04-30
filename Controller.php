@@ -8,7 +8,7 @@ class C
     const ERROR_LOGIN_ERROR = 3;
     const ERROR_UPDATE_TASK = 4;
 
-    public function Polling()
+    public function Polling()//TODO: should be splitted to few new methods; rename to Run()
     {
 //        echo 'let\'s freeze this CPU!';
         $pageName = 'index';
