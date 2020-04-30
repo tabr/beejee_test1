@@ -21,7 +21,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 -- GTID state at the beginning of the backup 
 --
 
-SET @@GLOBAL.GTID_PURGED='f1450783-8565-11e2-a364-001b21d5508c:1-167186';
+SET @@GLOBAL.GTID_PURGED='f1450783-8565-11e2-a364-001b21d5508c:1-167693';
 
 --
 -- Table structure for table `task`
@@ -46,7 +46,7 @@ CREATE TABLE `task` (
 
 LOCK TABLES `task` WRITE;
 /*!40000 ALTER TABLE `task` DISABLE KEYS */;
-INSERT INTO `task` VALUES (1,'user1','email@m.l','test1123',3),(2,'user2','email@m.2','test2',0),(3,'user3','email@m.3','test3',0),(4,'user4','email@m.4','test4',0),(5,'na\'m&quot;e','dfas@km.ru','aaa&lt;script&gt;alert(‘test’);&lt;/script&gt;bbb',2),(6,'na\'m&quot;e','asdf@km.ru','aaa&lt;script&gt;alert(‘test’);&lt;/script&gt;bbb',0),(7,'asdf','asdf@m.ru','asdfasdfhui',3),(8,'asdf','asdf@m.ru','asdfasdf',1),(9,'a','a@bc.com','test',1),(10,'sdfgsdf','sdf@km.tu','sdfgsgf',0);
+INSERT INTO `task` VALUES (1,'user1','email@m.l','test1123',0),(2,'user2','email@m.2','test2',0);
 /*!40000 ALTER TABLE `task` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -86,4 +86,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-04-25  2:14:31
+-- Dump completed on 2020-04-30 14:46:05
