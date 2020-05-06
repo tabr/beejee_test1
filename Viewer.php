@@ -98,6 +98,35 @@ pass:<br/><input type="password" name="user[pass]"/><br/>
     }
 
 
+    public function DisplayMessage($message = array())
+    {
+        $text   = '';
+        if (!empty($message))
+        {
+//            echo '<script>alert("1")</script>';
+            foreach ($message as $m)//array(0,0)
+            {
+//                echo '<script>alert("2',$m[0],$m[1],'")</script>';
+                if (!empty($m) && is_array($m) && isset($m[0]) && isset($m[1]))
+                {
+//                    echo '<script>alert("3")</script>';
+                    switch ($m[0])
+                    {
+                        case C::ACTION_ADD_TASK:
+                            if ($m[1] == C::ERROR_NO_ERROR)
+                            {
+                                $text   = 'Задание успешно добавлено';
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+        if(!empty($text))
+        {
+            echo '<script>alert("', addslashes($text), '")</script>';
+        }
+    }
     public function DisplayError($errors)
     {
 //        echo 'asdfasdf';
@@ -321,6 +350,9 @@ pass:<br/><input type="password" name="user[pass]"/><br/>
 
         if (!empty($pageData['errors'])) {
             $this->DisplayError($pageData['errors']);
+        }
+        if (!empty($pageData['message'])) {
+            $this->DisplayMessage($pageData['message']);
         }
         $this->BottomScripts();
         echo '</body>', PHP_EOL;

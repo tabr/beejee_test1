@@ -2,6 +2,9 @@
 
 class C
 {
+    const ACTION_NO_ACTION = 0;
+    const ACTION_ADD_TASK = 1;
+
     const ERROR_NO_ERROR = 0;
     const ERROR_TASK_VALIDATION = 1;
     const ERROR_PAGE_NOT_FOUND = 2;
@@ -17,7 +20,7 @@ class C
         $errors = array();
         $data = '';
 
-        $pageData = array();
+        $pageData = array();//TODO: Make object!
         $pageData['Controller'] = $this;
         $pageData['errors'] = array();
 
@@ -79,7 +82,11 @@ class C
                 $T = new TextTask($data['name'], $data['email'], $data['text']);
                 if ($T->IsAllOK()) {
 #                echo '<PRE>';var_dump($T);echo '</PRE>';
-                    $this->pM->AddTask($T);
+                    $result = $this->pM->AddTask($T);
+                    if (!empty($result))
+                    {
+                        $pageData['message'][] = array(self::ACTION_ADD_TASK, self::ERROR_NO_ERROR);
+                    }
                 } else {
                     $pageData['errors'][] = array(self::ERROR_TASK_VALIDATION, $T->GetLastError());
                 }
